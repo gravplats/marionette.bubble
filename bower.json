@@ -1,0 +1,14 @@
+{
+  "name": "marionette.bubble",
+  "version": "0.1.0",
+  "authors": [
+    "Mattias Rydengren <mattias.rydengren@coderesque.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "backbone.marionette": "~1.7.3"
+  },
+  "devDependencies": {
+    "jasmine-jquery": "~2.0.3"
+  }
+}

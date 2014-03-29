@@ -3,13 +3,40 @@ Marionette.BubbleRegion = (function(Marionette, Backbone, _) {
 
   return Marionette.Region.extend({
 
-    ignoredEventNames: [ 'before:close', 'before:show', 'close', 'render', 'show' ],
+    ignoredEventNames: [
+      'before:close',
+      'before:render',
+      'before:show',
+      'close',
+      'render',
+      'show',
+
+      'collection:before:render',
+      'collection:rendered',
+
+      'composite:collection:before:render',
+      'composite:collection:rendered',
+      'composite:model:rendered',
+      'composite:rendered',
+
+      'before:item:added',
+      'after:item:added',
+
+      'item:before:render',
+      'item:rendered',
+      'item:removed'
+    ],
+
+    itemViewEventPrefix: 'itemview',
 
     onBeforeShow: function(view) {
       this.listenTo(view, 'all', this.bubble);
     },
 
     bubble: function(eventName) {
+      var pattern = new RegExp(this.itemViewEventPrefix + ':', 'g');
+      eventName = eventName.replace(pattern, '');
+
       if (_(this.ignoredEventNames).contains(eventName)) {
         return false;
       }
@@ -31,7 +58,10 @@ Marionette.BubbleLayout = (function(Marionette, Backbone, _) {
 
   return Marionette.Layout.extend({
 
-    ignoredEventNames: [ 'before:show', 'show '],
+    ignoredEventNames: [
+      'before:show',
+      'show '
+    ],
 
     regionType: Marionette.BubbleRegion,
 

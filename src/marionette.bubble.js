@@ -6,13 +6,15 @@ Marionette.BubbleRegion = (function(Marionette, Backbone, _) {
     ignoredEventNames: [ 'before:close', 'before:show', 'close', 'render', 'show '],
 
     onBeforeShow: function(view) {
-      this.listenTo(view, 'all', function(eventName) {
-        if (_(this.ignoredEventNames).contains(eventName)) {
-          return;
-        }
+      this.listenTo(view, 'all', this.bubble);
+    },
 
-        this.trigger.apply(this, arguments);
-      });
+    bubble: function(eventName) {
+      if (_(this.ignoredEventNames).contains(eventName)) {
+        return;
+      }
+
+      this.trigger.apply(this, arguments);
     },
 
     onClose: function(view) {
@@ -30,15 +32,11 @@ Marionette.BubbleLayout = (function(Marionette, Backbone, _) {
 
     ignoredEventNames: [ 'before:show', 'show '],
 
+    regionType: Marionette.BubbleRegion,
+
     constructor: function() {
       this.listenTo(this, 'region:add', function(name, region) {
-        this.listenTo(region, 'all', function(eventName) {
-          if (_(this.ignoredEventNames).contains(eventName)) {
-            return;
-          }
-
-          this.trigger.apply(this, arguments);
-        });
+        this.listenTo(region, 'all', this.bubble);
       });
 
       this.listenTo(this, 'region:remove', function(name, region) {
@@ -48,7 +46,13 @@ Marionette.BubbleLayout = (function(Marionette, Backbone, _) {
       Marionette.Layout.prototype.constructor.apply(this, arguments);
     },
 
-    regionType: Marionette.BubbleRegion
+    bubble: function(eventName) {
+      if (_(this.ignoredEventNames).contains(eventName)) {
+        return;
+      }
+
+      this.trigger.apply(this, arguments);
+    }
 
   });
 
